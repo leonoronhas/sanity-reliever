@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sanity Reliever for FTC employees WFH" />
+    <title>Sanity Reliever</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script>
+      // Timer countdown
+      function countdown(minutes) {
+        var seconds = 60;
+        var mins = minutes;
+        function tick() {
+          //This script expects an element with an ID = "counter". You can change that to what ever you want.
+          var counter = document.getElementById("counter");
+          var current_minutes = mins - 1;
+          seconds--;
+          counter.innerHTML =
+            current_minutes.toString() +
+            ":" +
+            (seconds < 10 ? "0" : "") +
+            String(seconds);
+          if (seconds > 0) {
+            setTimeout(tick, 1000);
+          } else {
+            if (mins > 1) {
+              countdown(mins - 1);
+            }
+          }
+        }
+        tick();
+      }
+
+      // Run countdown every time 10min has passed
+      function runItAgain(hour) {
+        for (let i = 0; i < hour*6; i++) {
+          countdown(10)
+          console.log("Countdown called " + i);
+        }
+      }
+
+      // Clicks based on hours requested
+      function timeSelector(hour) {
+        
+        document.getElementById("running").innerHTML =
+          "Script started and will run for " + hour + " hour(s)";
+
+        let clickMe = document.getElementById("clickMe");
+
+        let i = 0;
+
+        var interval = setInterval(function () {
+          if (i != hour * 6) {
+            console.log("runItAgain called " + i);
+            clickMe.click();
+            runItAgain(hour);
+            i++;
+          } else {
+            clearInterval(interval);
+            document.getElementById("countdown").innerHTML =
+              hour +
+              " hour(s) have passed, stopped script. Click the button above to re-start the script";
+          }
+        }, 600000);
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="center">
+        <header>
+          <p style="padding: 50px; font-size: x-large" id="clickMe">
+            FTC WFH - Sanity Reliever
+          </p>
+          <p id="clickMe">Choose how long do you want the script to run</p>
+        </header>
+        <main style="display: inline-table; justify-content: space-around">
+          <button class="select-css" value="1" onclick="timeSelector(value);">
+            1 hour
+          </button>
+          <button class="select-css" value="2" onclick="timeSelector(value)">
+            2 hours
+          </button>
+          <button class="select-css" value="3" onclick="timeSelector(value)">
+            3 hours
+          </button>
+          <button class="select-css" value="4" onclick="timeSelector(value)">
+            4 hours
+          </button>
+          <button class="select-css" value="5" onclick="timeSelector(value)">
+            5 hours
+          </button>
+          <button class="select-css" value="6" onclick="timeSelector(value)">
+            6 hours
+          </button>
+          <button class="select-css" value="7" onclick="timeSelector(value)">
+            7 hours
+          </button>
+          <button class="select-css" value="8" onclick="timeSelector(value);countdown(10)">
+            8 hours
+          </button>
+          <br />
+          <p id="running"></p>
+          <p id="countdown"></p>
+          <div style="display: flex; justify-content: space-around;">
+          <p id="restart" >Time remaining until next script:<p id="counter">
+          </p></p></div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
