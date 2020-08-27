@@ -1,113 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Sanity Reliever for FTC employees WFH" />
-    <title>Sanity Reliever</title>
-    <link rel="stylesheet" href="/style.css" />
-    <script>
-      // Timer countdown
-      function countdown(minutes) {
-        var seconds = 60;
-        var mins = minutes;
-        function tick() {
-          //This script expects an element with an ID = "counter". You can change that to what ever you want.
-          var counter = document.getElementById("counter");
-          var current_minutes = mins - 1;
-          seconds--;
-          counter.innerHTML =
-            current_minutes.toString() +
-            ":" +
-            (seconds < 10 ? "0" : "") +
-            String(seconds);
-          if (seconds > 0) {
-            setTimeout(tick, 1000);
-          } else {
-            if (mins > 1) {
-              countdown(mins - 1);
-            }
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sanity Reliever for FTC employees WFH" />
+  <title>Sanity Reliever</title>
+  <style>
+    .container {
+      text-align: center;
+    }
+
+    body {
+      background-color: gray;
+      color: white;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      font-size: large;
+    }
+
+    .center {
+      padding: 20px;
+      height: 600px;
+      background-color: black;
+      border-radius: 0.89em;
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .select-css {
+      text-align: center;
+      font-size: 16px;
+      font-family: sans-serif;
+      font-weight: 700;
+      color: #444;
+      line-height: 1.3;
+      padding: 0.6em 1.4em 0.5em 0.8em;
+      width: 25%;
+      max-width: 25%;
+      box-sizing: border-box;
+      margin: 0;
+      border: 1px solid #aaa;
+      box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+      border-radius: 0.9em;
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      appearance: none;
+      background-color: #fff;
+      background-repeat: no-repeat, repeat;
+      background-position: right 0.7em top 50%, 0 0;
+      background-size: 0.65em auto, 100%;
+    }
+
+    footer {
+      margin-top: 100px;
+    }
+
+    .select-css::-ms-expand {
+      display: none;
+    }
+
+    .select-css:hover {
+      border-color: #888;
+    }
+
+    .select-css:focus {
+      border-color: #aaa;
+      box-shadow: 0 0 1px 3px rgba(59, 153, 252, 0.7);
+      box-shadow: 0 0 0 3px -moz-mac-focusring;
+      color: #222;
+      outline: none;
+    }
+
+    .select-css option {
+      font-weight: normal;
+      text-align: center;
+    }
+
+    /* Support for rtl text, explicit support for Arabic and Hebrew */
+    *[dir="rtl"] .select-css,
+    :root:lang(ar) .select-css,
+    :root:lang(iw) .select-css {
+      background-position: left 0.7em top 50%, 0 0;
+      padding: 0.6em 0.8em 0.5em 1.4em;
+    }
+
+    /* Disabled styles */
+    .select-css:disabled,
+    .select-css[aria-disabled="true"] {
+      color: gray;
+    }
+
+    .select-css:disabled:hover,
+    .select-css[aria-disabled="true"] {
+      border-color: #aaa;
+    }
+  </style>
+  <script>
+    // Timer countdown
+    function countdown(minutes) {
+      var seconds = 60;
+      var mins = minutes;
+      function tick() {
+        //This script expects an element with an ID = "counter". You can change that to what ever you want.
+        var counter = document.getElementById("counter");
+        var current_minutes = mins - 1;
+        seconds--;
+        counter.innerHTML =
+          current_minutes.toString() +
+          ":" +
+          (seconds < 10 ? "0" : "") +
+          String(seconds);
+        if (seconds > 0) {
+          setTimeout(tick, 1000);
+        } else {
+          if (mins > 1) {
+            countdown(mins - 1);
           }
         }
-        tick();
       }
+      tick();
+    }
 
-      // Run countdown every time 10min has passed
-      function runItAgain(hour) {
-        for (let i = 0; i < hour*6; i++) {
-          countdown(10)
-          console.log("Countdown called " + i);
+    // Run countdown every time 10min has passed
+    function runItAgain(hour) {
+      for (let i = 0; i < hour * 6; i++) {
+        countdown(10)
+        console.log("Countdown called " + i);
+      }
+    }
+
+    // Clicks based on hours requested
+    function timeSelector(hour) {
+
+      document.getElementById("running").innerHTML =
+        "Script started and will run for " + hour + " hour(s)";
+      document.getElementById('restart').innerHTML = "Time remaining until next input:"
+      runItAgain(hour);
+
+      let clickMe = document.getElementById("clickMe");
+
+      let i = 0;
+
+      var interval = setInterval(function () {
+        if (i != hour * 6) {
+          console.log("runItAgain called " + i);
+          clickMe.click();
+          document.getElementById('restart').innerHTML = "Time remaining until next input:"
+          runItAgain(hour);
+          i++;
+        } else {
+          clearInterval(interval);
+          document.getElementById("countdown").innerHTML =
+            hour +
+            " hour(s) have passed, stopped script. Click the button above to re-start the script";
         }
-      }
+      }, 600000);
+    }
+  </script>
+</head>
 
-      // Clicks based on hours requested
-      function timeSelector(hour) {
-        
-        document.getElementById("running").innerHTML =
-          "Script started and will run for " + hour + " hour(s)";
-
-        let clickMe = document.getElementById("clickMe");
-
-        let i = 0;
-
-        var interval = setInterval(function () {
-          if (i != hour * 6) {
-            console.log("runItAgain called " + i);
-            clickMe.click();
-            runItAgain(hour);
-            i++;
-          } else {
-            clearInterval(interval);
-            document.getElementById("countdown").innerHTML =
-              hour +
-              " hour(s) have passed, stopped script. Click the button above to re-start the script";
-          }
-        }, 600000);
-      }
-    </script>
-  </head>
-  <body>
-    <div class="container">
-      <div class="center">
-        <header>
-          <p style="padding: 50px; font-size: x-large" id="clickMe">
-            FTC WFH - Sanity Reliever
-          </p>
-          <p id="clickMe">Choose how long do you want the script to run</p>
-        </header>
-        <main style="display: inline-table; justify-content: space-around">
-          <button class="select-css" value="1" onclick="timeSelector(value);">
-            1 hour
-          </button>
-          <button class="select-css" value="2" onclick="timeSelector(value)">
-            2 hours
-          </button>
-          <button class="select-css" value="3" onclick="timeSelector(value)">
-            3 hours
-          </button>
-          <button class="select-css" value="4" onclick="timeSelector(value)">
-            4 hours
-          </button>
-          <button class="select-css" value="5" onclick="timeSelector(value)">
-            5 hours
-          </button>
-          <button class="select-css" value="6" onclick="timeSelector(value)">
-            6 hours
-          </button>
-          <button class="select-css" value="7" onclick="timeSelector(value)">
-            7 hours
-          </button>
-          <button class="select-css" value="8" onclick="timeSelector(value);countdown(10)">
-            8 hours
-          </button>
-          <br />
-          <p id="running"></p>
-          <p id="countdown"></p>
-          <div style="display: flex; justify-content: space-around;">
-          <p id="restart" >Time remaining until next script:<p id="counter">
-          </p></p></div>
-        </main>
-      </div>
+<body>
+  <div class="container">
+    <div class="center">
+      <header>
+        <p style="padding: 50px; font-size: x-large" id="clickMe">
+          FTC WFH - Sanity Reliever
+        </p>
+        <p id="clickMe">Choose how long do you want the script to run</p>
+      </header>
+      <main style="display: inline-table; justify-content: space-around">
+        <button class="select-css" value="1" onclick="timeSelector(value);">
+          1 hour
+        </button>
+        <button class="select-css" value="2" onclick="timeSelector(value)">
+          2 hours
+        </button>
+        <button class="select-css" value="3" onclick="timeSelector(value)">
+          3 hours
+        </button>
+        <button class="select-css" value="4" onclick="timeSelector(value)">
+          4 hours
+        </button>
+        <button class="select-css" value="5" onclick="timeSelector(value)">
+          5 hours
+        </button>
+        <button class="select-css" value="6" onclick="timeSelector(value)">
+          6 hours
+        </button>
+        <button class="select-css" value="7" onclick="timeSelector(value)">
+          7 hours
+        </button>
+        <button class="select-css" value="8" onclick="timeSelector(value)">
+          8 hours
+        </button>
+        <br />
+        <p id="running"></p>
+        <p id="countdown"></p>
+        <div style="display: flex; justify-content: space-around;">
+          <p id="restart">
+          <p id="counter">
+          </p></p>
+        </div>
+      </main>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
